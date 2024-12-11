@@ -10,7 +10,7 @@
 
 ### Upcoming Features:
 
-- [ ] Implement **fuzzy wuzzy** for more accurate translation checks.
+- [*] Implement **fuzzy wuzzy** for more accurate translation checks.
 - [ ] Add **settings** for user customization.
 - [ ] Implement **save** and **reset** options for word frequency arrays.
 

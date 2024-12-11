@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Alert } from "react-native";
 import RNFS, { DocumentDirectoryPath, exists } from "react-native-fs";
 import translationData from "./translations.json";
+import { ratio } from "fuzzball";
 
 export interface WordItem {
   word: string;
@@ -33,7 +34,6 @@ export default function useTranslationTrainer() {
           const jsonData = JSON.parse(jsonString);
           setWordsArray(jsonData);
           generateWeightedArray(jsonData);
-          console.log(jsonData);
         } catch (error) {
           console.error("Error reading file:", error);
         }
@@ -74,21 +74,31 @@ export default function useTranslationTrainer() {
     if (!curentWord) {
       return;
     }
-    console.log(curentWord);
-    console.log(userWord);
-    let isRight = false;
 
-    curentWord.translations.forEach((translation) => {
-      if (userWord.toLowerCase() === translation.toLowerCase()) {
-        console.log("success");
-        setRightWord(curentWord.word);
-        isRight = true;
-      }
-    });
-    if (!isRight) {
-      console.log("fail");
+    const findedTranslateWord = curentWord.translations.reduce(
+      (acc: { rightWord: string; ratioValue: number }, translation: string) => {
+        let ratioValue = ratio(
+          userWord.toLowerCase(),
+          translation.toLowerCase()
+        );
+        if (acc.ratioValue < ratioValue) {
+          acc.ratioValue = ratioValue;
+          acc.rightWord = curentWord.word;
+          setRightWord(curentWord.word);
+        }
+        return acc;
+      },
+      { ratioValue: 0, rightWord: "" }
+    );
+
+    if (findedTranslateWord.rightWord === "") {
       Alert.alert("Ошибка!", "Правильные слова: " + curentWord.translations);
       setWrongWord(curentWord.word);
+    } else if (findedTranslateWord.ratioValue < 99) {
+      Alert.alert(
+        "Правильно",
+        "Но есть небольшая ошибка: " + curentWord.translations
+      );
     }
   }
 
