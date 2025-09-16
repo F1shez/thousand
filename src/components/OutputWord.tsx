@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 interface Word {
@@ -26,7 +25,7 @@ export function OutputWord(props: OutputWordProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: "transparent",
         alignItems: 'center',
         justifyContent: 'center',
     },

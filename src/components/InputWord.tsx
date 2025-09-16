@@ -36,11 +36,11 @@ const styles = StyleSheet.create({
         height: 50,
         paddingLeft: 10,
         paddingRight: 10,
-        margin: 20,
+        margin: 15,
     },
     input: {
         color: 'white',
-        fontSize: 20,
+        fontSize: 16,
         paddingLeft: 10,
         flex: 1,
         height: 40,

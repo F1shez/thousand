@@ -1,21 +1,33 @@
-import { Button, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 
-export function Settings() {
-    return (
-        <View>
-            <Text>Settings</Text>
-            <Button
-                title="Reset frequency words"
-                onPress={() => console.log("Pressed")}
-            ></Button>
-            <Button
-                title="Поменять язык"
-                onPress={() => console.log("Pressed")}
-            ></Button>
-            <Button
-                title="Donate (^_^)"
-                onPress={() => console.log("Pressed")}
-            ></Button>
-        </View>
-    )
+interface SettingsProps {
+  setShowSettings: (value: boolean) => void;
+  resetFrequency: () => void;
 }
+
+export function Settings(props: SettingsProps) {
+  return (
+    <View style={styles.settings}>
+      <Button
+        title="closeSettings"
+        onPress={() => {
+          props.setShowSettings(false);
+        }}
+      />
+      <Text>Settings</Text>
+      <Button
+        title="Reset frequency words"
+        onPress={() => props.resetFrequency()}
+      ></Button>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  settings: {
+    backgroundColor: "#000",
+    position: "absolute",
+    height: "100%",
+    width: "100%",
+  },
+});

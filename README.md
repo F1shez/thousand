@@ -61,3 +61,8 @@ yarn ios
 If everything is configured correctly, you should see your app running in your **Android Emulator** or **iOS Simulator** shortly, assuming correct setup of your emulator/simulator.
 
 **Alternative:** You can also run the app directly from Android Studio or Xcode for a more integrated development experience.
+
+
+Идеи: 
+Показывать процент правильных ответов, 
+При правильном ответе подсвечивать зеленным фон,

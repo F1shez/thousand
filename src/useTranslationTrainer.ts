@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { Alert } from "react-native";
+import { Alert, ToastAndroid } from "react-native";
 import RNFS, { DocumentDirectoryPath, exists } from "react-native-fs";
 import translationData from "./translations.json";
 import { ratio } from "fuzzball";
+import Toast from "react-native-toast-message";
 
 export interface WordItem {
   word: string;
@@ -27,17 +28,6 @@ export default function useTranslationTrainer() {
       if (!exist) {
         await RNFS.writeFile(path, JSON.stringify(translationData), "utf8");
       }
-
-      const readJsonFile = async () => {
-        try {
-          const jsonString = await RNFS.readFile(path, "utf8");
-          const jsonData = JSON.parse(jsonString);
-          setWordsArray(jsonData);
-          generateWeightedArray(jsonData);
-        } catch (error) {
-          console.error("Error reading file:", error);
-        }
-      };
 
       readJsonFile();
     });
@@ -72,7 +62,7 @@ export default function useTranslationTrainer() {
 
   function checkTranslateWord(userWord: string) {
     if (!curentWord) {
-      return;
+      return false;
     }
 
     const findedTranslateWord = curentWord.translations.reduce(
@@ -81,10 +71,9 @@ export default function useTranslationTrainer() {
           userWord.toLowerCase(),
           translation.toLowerCase()
         );
-        if (acc.ratioValue < ratioValue) {
+        if (ratioValue > 86 && acc.ratioValue < ratioValue) {
           acc.ratioValue = ratioValue;
           acc.rightWord = curentWord.word;
-          setRightWord(curentWord.word);
         }
         return acc;
       },
@@ -92,14 +81,21 @@ export default function useTranslationTrainer() {
     );
 
     if (findedTranslateWord.rightWord === "") {
-      Alert.alert("Ошибка!", "Правильные слова: " + curentWord.translations);
+      Toast.show({
+        type: "error",
+        text1: "Правильные слова:",
+        text2: curentWord.translations.join(", ")
+      });
       setWrongWord(curentWord.word);
-    } else if (findedTranslateWord.ratioValue < 99) {
-      Alert.alert(
-        "Правильно",
-        "Но есть небольшая ошибка: " + curentWord.translations
-      );
+      return false;
     }
+    Toast.show({
+        type: "success",
+        text1: "Правильно, другие переводы:",
+        text2: curentWord.translations.join(", ")
+      });
+    setRightWord(curentWord.word);
+    return true;
   }
 
   function generateWeightedArray(array: any[]) {
@@ -117,5 +113,30 @@ export default function useTranslationTrainer() {
     return weightedArray[randomIndex].word;
   }, [weightedArray]);
 
-  return { getRandomWord, checkTranslateWord };
+  async function readJsonFile() {
+    try {
+      const jsonString = await RNFS.readFile(path, "utf8");
+      const jsonData = JSON.parse(jsonString);
+      setWordsArray(jsonData);
+      generateWeightedArray(jsonData);
+    } catch (error) {
+      console.error("Error reading file:", error);
+    }
+  }
+
+  async function saveFrequencyJson() {
+    await RNFS.writeFile(path, JSON.stringify(wordsArray), "utf8");
+  }
+
+  async function resetFrequencyJson() {
+    await RNFS.writeFile(path, JSON.stringify(translationData), "utf8");
+    readJsonFile();
+  }
+
+  return {
+    getRandomWord,
+    checkTranslateWord,
+    saveFrequencyJson,
+    resetFrequencyJson,
+  };
 }
