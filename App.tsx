@@ -1,10 +1,12 @@
 import { OutputWord } from "./src/components/OutputWord";
-import { Animated, Button, StyleSheet, Text, View } from "react-native";
+import { Animated, Button, StyleSheet } from "react-native";
 import { InputWord } from "./src/components/InputWord";
 import React, { useState, useEffect, useRef } from "react";
 import useTranslationTrainer from "./src/useTranslationTrainer";
 import { Settings } from "./src/components/Settings";
 import Toast from "react-native-toast-message";
+import './global.css';
+
 
 export default function App() {
   const [randomWord, setRandomWord] = useState<string | null>(null);
@@ -83,3 +85,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
