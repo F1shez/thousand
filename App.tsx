@@ -16,6 +16,7 @@ import Toast from 'react-native-toast-message';
 import { Settings as SettingsIcon } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { S } from './constants/spacing';
+import { InfoBar } from './src/components/InfoBar';
 
 export default function App() {
   const [randomWord, setRandomWord] = useState<string | null>(null);
@@ -25,6 +26,8 @@ export default function App() {
   const backgroundAnim = useRef(new Animated.Value(0)).current;
 
   const [behaviour, setBehaviour] = useState<'padding' | undefined>('padding');
+  const [rightWordsCount, setRightWordsCount] = useState<number>(0);
+  const [wrongWordsCount, setWrongWordsCount] = useState<number>(0);
 
   const {
     getRandomWord,
@@ -54,6 +57,8 @@ export default function App() {
 
   function handleCheckWord(word: string) {
     const isCorrect = checkTranslateWord(word);
+    if (isCorrect) setRightWordsCount(rightWordsCount + 1);
+    else setWrongWordsCount(wrongWordsCount + 1);
 
     Animated.sequence([
       Animated.timing(backgroundAnim, {
@@ -86,10 +91,14 @@ export default function App() {
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === "android" ? behaviour : undefined}
+        behavior={Platform.OS === 'android' ? behaviour : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <Animated.View style={[styles.body, { backgroundColor }]}>
+          <InfoBar
+            rightWordsCount={rightWordsCount}
+            wrongWordsCount={wrongWordsCount}
+          />
           <TouchableOpacity
             onPress={() => {
               setShowSettings(true);

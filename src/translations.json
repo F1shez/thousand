@@ -467,7 +467,7 @@
     {
         "word": "are",
         "translations": [
-            "АР"
+            "являются"
         ],
         "frequency": 5
     },
@@ -486,7 +486,10 @@
     },
     {
         "word": "aren't",
-        "translations": [],
+        "translations": [
+            "не",
+            "нет"
+        ],
         "frequency": 5
     },
     {
