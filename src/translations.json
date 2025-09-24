@@ -3166,6 +3166,7 @@
     {
         "word": "fine",
         "translations": [
+            "хорошо",
             "штраф"
         ],
         "frequency": 5
@@ -8538,7 +8539,8 @@
     {
         "word": "still",
         "translations": [
-            "все еще"
+            "все еще",
+            "до сих пор"
         ],
         "frequency": 5
     },
@@ -9756,6 +9758,7 @@
     {
         "word": "want",
         "translations": [
+            "хочу",
             "хотеть",
             "требоваться"
         ],
@@ -10323,29 +10326,39 @@
     },
     {
         "word": "you'd",
-        "translations": [],
+        "translations": [
+            "ты бы"
+        ],
         "frequency": 5
     },
     {
         "word": "you'll",
-        "translations": [],
+        "translations": [
+            "ты будешь",
+            "вы"
+        ],
         "frequency": 5
     },
     {
         "word": "you're",
-        "translations": [],
+        "translations": [
+            "ты"
+        ],
         "frequency": 5
     },
     {
         "word": "you've",
-        "translations": [],
+        "translations": [
+            "ты",
+            "вы"
+        ],
         "frequency": 5
     },
     {
         "word": "young",
         "translations": [
             "юный",
-            "молодые",
+            "молодой",
             "более молодой",
             "юношеский",
             "младой"

@@ -11,7 +11,6 @@ import { InputWord } from './src/components/InputWord';
 import React, { useState, useEffect, useRef } from 'react';
 import useTranslationTrainer from './src/useTranslationTrainer';
 import { Settings } from './src/components/Settings';
-import Toast from 'react-native-toast-message';
 
 import { Settings as SettingsIcon } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -88,37 +87,38 @@ export default function App() {
   });
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'android' ? behaviour : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
-        <Animated.View style={[styles.body, { backgroundColor }]}>
-          <InfoBar
-            rightWordsCount={rightWordsCount}
-            wrongWordsCount={wrongWordsCount}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setShowSettings(true);
-            }}
-            style={[styles.settingsButton]}
-          >
-            <SettingsIcon color="black" size={24} />
-          </TouchableOpacity>
-          {randomWord ? <OutputWord word={randomWord} /> : null}
-          <InputWord callback={handleCheckWord} />
-          {showSettings ? (
-            <Settings
-              setShowSettings={setShowSettings}
-              resetFrequency={resetFrequencyJson}
+    <>
+      <SafeAreaView style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'android' ? behaviour : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+        >
+          <Animated.View style={[styles.body, { backgroundColor }]}>
+            <InfoBar
+              rightWordsCount={rightWordsCount}
+              wrongWordsCount={wrongWordsCount}
             />
-          ) : null}
-          <Toast />
-        </Animated.View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <TouchableOpacity
+              onPress={() => {
+                setShowSettings(true);
+              }}
+              style={[styles.settingsButton]}
+            >
+              <SettingsIcon color="black" size={24} />
+            </TouchableOpacity>
+            {randomWord ? <OutputWord word={randomWord} /> : null}
+            <InputWord callback={handleCheckWord} />
+            {showSettings ? (
+              <Settings
+                setShowSettings={setShowSettings}
+                resetFrequency={resetFrequencyJson}
+              />
+            ) : null}
+          </Animated.View>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </>
   );
 }
 
