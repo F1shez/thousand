@@ -13,8 +13,6 @@
     "@react-native/new-app-screen": "0.81.4",
     "fuzzball": "^2.2.3",
     "lucide-react-native": "^0.544.0",
-    "nativewind": "^4.2.1",
-    "prettier-plugin-tailwindcss": "^0.5.14",
     "react": "19.1.0",
     "react-native": "0.81.4",
     "react-native-fs": "^2.20.0",
@@ -22,8 +20,7 @@
     "react-native-safe-area-context": "^5.4.0",
     "react-native-svg": "^15.13.0",
     "react-native-toast-message": "^2.3.3",
-    "react-native-worklets": "^0.5.1",
-    "tailwindcss": "^3.4.17"
+    "react-native-worklets": "^0.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

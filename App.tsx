@@ -1,12 +1,21 @@
-import { OutputWord } from "./src/components/OutputWord";
-import { Animated, Button, StyleSheet } from "react-native";
-import { InputWord } from "./src/components/InputWord";
-import React, { useState, useEffect, useRef } from "react";
-import useTranslationTrainer from "./src/useTranslationTrainer";
-import { Settings } from "./src/components/Settings";
-import Toast from "react-native-toast-message";
-import './global.css';
+import { OutputWord } from './src/components/OutputWord';
+import {
+  Animated,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  Platform,
+  StyleSheet,
+  Keyboard,
+} from 'react-native';
+import { InputWord } from './src/components/InputWord';
+import React, { useState, useEffect, useRef } from 'react';
+import useTranslationTrainer from './src/useTranslationTrainer';
+import { Settings } from './src/components/Settings';
+import Toast from 'react-native-toast-message';
 
+import { Settings as SettingsIcon } from 'lucide-react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { S } from './constants/spacing';
 
 export default function App() {
   const [randomWord, setRandomWord] = useState<string | null>(null);
@@ -15,12 +24,28 @@ export default function App() {
   const callCount = useRef(0);
   const backgroundAnim = useRef(new Animated.Value(0)).current;
 
+  const [behaviour, setBehaviour] = useState<'padding' | undefined>('padding');
+
   const {
     getRandomWord,
     checkTranslateWord,
     resetFrequencyJson,
     saveFrequencyJson,
   } = useTranslationTrainer();
+
+  useEffect(() => {
+    const showListener = Keyboard.addListener('keyboardDidShow', () => {
+      setBehaviour('padding');
+    });
+    const hideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setBehaviour(undefined);
+    });
+
+    return () => {
+      showListener.remove();
+      hideListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     const word = getRandomWord();
@@ -54,35 +79,49 @@ export default function App() {
 
   const backgroundColor = backgroundAnim.interpolate({
     inputRange: [-1, 0, 1],
-    outputRange: ["#ffb3b3", "#fff", "#90ee90"], // красный → белый → зелёный
+    outputRange: ['#ffb3b3', '#fff', '#90ee90'], // красный → белый → зелёный
   });
 
   return (
-    <Animated.View style={[styles.container, { backgroundColor }]}>
-      <Button
-        title="settings"
-        onPress={() => {
-          setShowSettings(true);
-        }}
-      />
-      {randomWord ? <OutputWord word={randomWord} /> : null}
-      <InputWord callback={handleCheckWord} />
-      {showSettings && (
-        <Settings
-          setShowSettings={setShowSettings}
-          resetFrequency={resetFrequencyJson}
-        />
-      )}
-      <Toast />
-    </Animated.View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "android" ? behaviour : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <Animated.View style={[styles.body, { backgroundColor }]}>
+          <TouchableOpacity
+            onPress={() => {
+              setShowSettings(true);
+            }}
+            style={[styles.settingsButton]}
+          >
+            <SettingsIcon color="black" size={24} />
+          </TouchableOpacity>
+          {randomWord ? <OutputWord word={randomWord} /> : null}
+          <InputWord callback={handleCheckWord} />
+          {showSettings ? (
+            <Settings
+              setShowSettings={setShowSettings}
+              resetFrequency={resetFrequencyJson}
+            />
+          ) : null}
+          <Toast />
+        </Animated.View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  body: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  settingsButton: {
+    position: 'absolute',
+    top: S.xsmall,
+    right: S.xsmall,
   },
 });
-
