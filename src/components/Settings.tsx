@@ -1,10 +1,13 @@
 import { CircleX } from 'lucide-react-native';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { S } from '../../constants/spacing';
+import { mode, AppSettings } from '../useSettings';
 
 interface SettingsProps {
   setShowSettings: (value: boolean) => void;
   resetFrequency: () => void;
+  settings: AppSettings;
+  toggleMode: () => void;
 }
 
 export function Settings(props: SettingsProps) {
@@ -21,10 +24,22 @@ export function Settings(props: SettingsProps) {
           <CircleX color="black" size={24} />
         </TouchableOpacity>
       </View>
-      <Button
-        title="Reset frequency words"
-        onPress={() => props.resetFrequency()}
-      />
+      <View style={styles.content}>
+        <View style={styles.button}>
+          <Button
+            title="Reset frequency words"
+            onPress={() => props.resetFrequency()}
+            color="#000000"
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            title={'current mode: ' + mode[props.settings.mode]}
+            onPress={() => props.toggleMode()}
+            color="#000000"
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -32,6 +47,10 @@ export function Settings(props: SettingsProps) {
 const styles = StyleSheet.create({
   body: {
     backgroundColor: 'white',
+  },
+  content: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
     fontSize: 24,
@@ -48,5 +67,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: S.xsmall,
     right: S.xsmall,
+  },
+  button: {
+    width: '50%',
+    marginBottom: 8,
+    paddingHorizontal: 4,
   },
 });

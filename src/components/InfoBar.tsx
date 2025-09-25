@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { S } from '../../constants/spacing';
 interface InfoBarProps {
   rightWordsCount: number;
   wrongWordsCount: number;
@@ -15,6 +16,7 @@ export function InfoBar(props: InfoBarProps) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: S.xxsmall,
     flexDirection: 'row',
     flexWrap: 'wrap',
   },

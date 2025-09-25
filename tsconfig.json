@@ -1,4 +1,9 @@
 {
+  "compilerOptions": {
+    "lib": [
+      "ES2023"
+    ]
+  },
   "extends": "@react-native/typescript-config",
   "include": [
     "**/*.ts",

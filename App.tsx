@@ -9,22 +9,28 @@ import {
 } from 'react-native';
 import { InputWord } from './src/components/InputWord';
 import React, { useState, useEffect, useRef } from 'react';
-import useTranslationTrainer from './src/useTranslationTrainer';
+import useTranslationTrainer, {
+  WeightedArrayItem,
+} from './src/useTranslationTrainer';
 import { Settings } from './src/components/Settings';
 
 import { Settings as SettingsIcon } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { S } from './constants/spacing';
 import { InfoBar } from './src/components/InfoBar';
+import { MultipleChoice } from './src/components/MultipleChoice';
+import { getRandomItem } from './src/utils';
+import useSettings, { mode } from './src/useSettings';
 
 export default function App() {
-  const [randomWord, setRandomWord] = useState<string | null>(null);
+  const [randomWord, setRandomWord] = useState<WeightedArrayItem | null>(null);
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
   const callCount = useRef(0);
   const backgroundAnim = useRef(new Animated.Value(0)).current;
 
   const [behaviour, setBehaviour] = useState<'padding' | undefined>('padding');
+
   const [rightWordsCount, setRightWordsCount] = useState<number>(0);
   const [wrongWordsCount, setWrongWordsCount] = useState<number>(0);
 
@@ -33,7 +39,10 @@ export default function App() {
     checkTranslateWord,
     resetFrequencyJson,
     saveFrequencyJson,
+    getRandomTranslation,
   } = useTranslationTrainer();
+
+  const { settings, toggleMode } = useSettings();
 
   useEffect(() => {
     const showListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -107,10 +116,25 @@ export default function App() {
             >
               <SettingsIcon color="black" size={24} />
             </TouchableOpacity>
-            {randomWord ? <OutputWord word={randomWord} /> : null}
-            <InputWord callback={handleCheckWord} />
-            {showSettings ? (
+            {randomWord ? <OutputWord word={randomWord.word} /> : null}
+            {randomWord ? (
+              <>
+                {settings?.mode === mode.InputWord ? (
+                  <InputWord callback={handleCheckWord} />
+                ) : null}
+                {settings?.mode === mode.MultipleChoise ? (
+                  <MultipleChoice
+                    callback={handleCheckWord}
+                    getRandomTranslation={getRandomTranslation}
+                    rightTranslation={getRandomItem(randomWord.translations)}
+                  />
+                ) : null}
+              </>
+            ) : null}
+            {showSettings && settings ? (
               <Settings
+                settings={settings}
+                toggleMode={toggleMode}
                 setShowSettings={setShowSettings}
                 resetFrequency={resetFrequencyJson}
               />

@@ -3,6 +3,7 @@ import RNFS, { DocumentDirectoryPath, exists } from 'react-native-fs';
 import translationData from './translations.json';
 import { ratio } from 'fuzzball';
 import { Alert } from 'react-native';
+import { getRandomItem } from './utils';
 
 export interface WordItem {
   word: string;
@@ -10,7 +11,7 @@ export interface WordItem {
   frequency: number;
 }
 
-interface WeightedArrayItem {
+export interface WeightedArrayItem {
   word: string;
   translations: string[];
 }
@@ -21,12 +22,14 @@ export default function useTranslationTrainer() {
   const [wordsArray, setWordsArray] = useState<WordItem[]>([]);
   const [weightedArray, setWeightedArray] = useState<WeightedArrayItem[]>([]);
   const [curentWord, setCurentWord] = useState<WeightedArrayItem | null>(null);
+  const [countWords, setCountWords] = useState<number>(0);
 
   const readJsonFile = useCallback(async () => {
     try {
       const jsonString = await RNFS.readFile(path, 'utf8');
-      const jsonData = JSON.parse(jsonString);
+      const jsonData = JSON.parse(jsonString) as WordItem[];
       setWordsArray(jsonData);
+      setCountWords(jsonData.length);
       generateWeightedArray(jsonData);
     } catch (error) {
       console.error('Error reading file:', error);
@@ -91,7 +94,7 @@ export default function useTranslationTrainer() {
 
     if (findedTranslateWord.rightWord === '') {
       Alert.alert(
-        'Правильные слова:',
+        `Правильный перевод ${curentWord.word}:`,
         curentWord.translations.join(', '),
         [
           {
@@ -120,8 +123,10 @@ export default function useTranslationTrainer() {
   const getRandomWord = useCallback(() => {
     if (weightedArray.length === 0) return null;
     const randomIndex = Math.floor(Math.random() * weightedArray.length);
+    if (weightedArray[randomIndex].translations.length === 0)
+      return getRandomWord();
     setCurentWord(weightedArray[randomIndex]);
-    return weightedArray[randomIndex].word;
+    return weightedArray[randomIndex];
   }, [weightedArray]);
 
   async function saveFrequencyJson() {
@@ -133,10 +138,18 @@ export default function useTranslationTrainer() {
     readJsonFile();
   }
 
+  function getRandomTranslation() {
+    const translations =
+      wordsArray[Math.floor(Math.random() * countWords)].translations;
+    if (translations.length === 0) return getRandomTranslation();
+    return getRandomItem(translations);
+  }
+
   return {
     getRandomWord,
     checkTranslateWord,
     saveFrequencyJson,
     resetFrequencyJson,
+    getRandomTranslation,
   };
 }
