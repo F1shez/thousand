@@ -1,11 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
 
-interface Word {
-    word: string;
-    frequency: number;
-    translation: string;
-}
-
 interface OutputWordProps {
     word: string,
 }

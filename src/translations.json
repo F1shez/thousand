@@ -467,7 +467,7 @@
     {
         "word": "are",
         "translations": [
-            "АР"
+            "являются"
         ],
         "frequency": 5
     },
@@ -486,7 +486,10 @@
     },
     {
         "word": "aren't",
-        "translations": [],
+        "translations": [
+            "не",
+            "нет"
+        ],
         "frequency": 5
     },
     {
@@ -1371,9 +1374,7 @@
         "word": "bus",
         "translations": [
             "автобус",
-            "магистральная шина",
-            "омнибус",
-            "аэробус"
+            "шина"
         ],
         "frequency": 5
     },
@@ -2939,8 +2940,7 @@
             "физиономия",
             "грань",
             "лицевая сторона",
-            "облик",
-            "забой"
+            "облик"
         ],
         "frequency": 5
     },
@@ -3163,6 +3163,7 @@
     {
         "word": "fine",
         "translations": [
+            "хорошо",
             "штраф"
         ],
         "frequency": 5
@@ -8535,7 +8536,8 @@
     {
         "word": "still",
         "translations": [
-            "все еще"
+            "все еще",
+            "до сих пор"
         ],
         "frequency": 5
     },
@@ -9753,6 +9755,7 @@
     {
         "word": "want",
         "translations": [
+            "хочу",
             "хотеть",
             "требоваться"
         ],
@@ -10320,29 +10323,39 @@
     },
     {
         "word": "you'd",
-        "translations": [],
+        "translations": [
+            "ты бы"
+        ],
         "frequency": 5
     },
     {
         "word": "you'll",
-        "translations": [],
+        "translations": [
+            "ты будешь",
+            "вы"
+        ],
         "frequency": 5
     },
     {
         "word": "you're",
-        "translations": [],
+        "translations": [
+            "ты"
+        ],
         "frequency": 5
     },
     {
         "word": "you've",
-        "translations": [],
+        "translations": [
+            "ты",
+            "вы"
+        ],
         "frequency": 5
     },
     {
         "word": "young",
         "translations": [
             "юный",
-            "молодые",
+            "молодой",
             "более молодой",
             "юношеский",
             "младой"
@@ -10362,6 +10375,31 @@
         "translations": [
             "сам",
             "себя"
+        ],
+        "frequency": 5
+    },
+    {
+        "word": "soldering",
+        "translations": [
+            "пайка",
+            "паяние",
+            "паяльный"
+        ],
+        "frequency": 5
+    },
+    {
+        "word": "sold",
+        "translations": [
+            "продал",
+            "проданный"
+        ],
+        "frequency": 5
+    },
+    {
+        "word": "mode",
+        "translations": [
+            "режим",
+            "способ"
         ],
         "frequency": 5
     }

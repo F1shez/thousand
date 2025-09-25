@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, TextInput, View, StyleSheet, TouchableOpacity, Text } from "react-native"
+import { TextInput, View, StyleSheet, TouchableOpacity, Text } from "react-native"
 
 interface InputWordProps {
     callback: (word: string) => void
