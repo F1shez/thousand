@@ -7,7 +7,8 @@ interface SettingsProps {
   setShowSettings: (value: boolean) => void;
   resetFrequency: () => void;
   settings: AppSettings;
-  toggleMode: () => void;
+  toggleInputMode: () => void;
+  toggleShowRandomlyTranslation: () => void;
 }
 
 export function Settings(props: SettingsProps) {
@@ -35,7 +36,17 @@ export function Settings(props: SettingsProps) {
         <View style={styles.button}>
           <Button
             title={'current mode: ' + mode[props.settings.mode]}
-            onPress={() => props.toggleMode()}
+            onPress={() => props.toggleInputMode()}
+            color="#000000"
+          />
+        </View>
+        <View style={styles.button}>
+          <Button
+            title={
+              'show random translation: ' +
+              props.settings.showRandomlyTranslation
+            }
+            onPress={() => props.toggleShowRandomlyTranslation()}
             color="#000000"
           />
         </View>

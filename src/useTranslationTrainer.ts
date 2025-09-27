@@ -4,6 +4,7 @@ import translationData from './translations.json';
 import { ratio } from 'fuzzball';
 import { Alert } from 'react-native';
 import { getRandomItem } from './utils';
+import { AppSettings } from './useSettings';
 
 export interface WordItem {
   word: string;
@@ -17,8 +18,12 @@ export interface WeightedArrayItem {
 }
 
 const path = `${DocumentDirectoryPath}/translations.json`;
-
-export default function useTranslationTrainer() {
+interface useTranslationTrainerProps {
+  settings: AppSettings | undefined;
+}
+export default function useTranslationTrainer(
+  props: useTranslationTrainerProps,
+) {
   const [wordsArray, setWordsArray] = useState<WordItem[]>([]);
   const [weightedArray, setWeightedArray] = useState<WeightedArrayItem[]>([]);
   const [curentWord, setCurentWord] = useState<WeightedArrayItem | null>(null);
@@ -142,7 +147,9 @@ export default function useTranslationTrainer() {
     const translations =
       wordsArray[Math.floor(Math.random() * countWords)].translations;
     if (translations.length === 0) return getRandomTranslation();
-    return getRandomItem(translations);
+    return props.settings?.showRandomlyTranslation
+      ? getRandomItem(translations)
+      : translations[0];
   }
 
   return {

@@ -34,15 +34,16 @@ export default function App() {
   const [rightWordsCount, setRightWordsCount] = useState<number>(0);
   const [wrongWordsCount, setWrongWordsCount] = useState<number>(0);
 
+  const { settings, toggleInputMode, toggleShowRandomlyTranslation } =
+    useSettings();
+
   const {
     getRandomWord,
     checkTranslateWord,
     resetFrequencyJson,
     saveFrequencyJson,
     getRandomTranslation,
-  } = useTranslationTrainer();
-
-  const { settings, toggleMode } = useSettings();
+  } = useTranslationTrainer({ settings });
 
   useEffect(() => {
     const showListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -126,7 +127,11 @@ export default function App() {
                   <MultipleChoice
                     callback={handleCheckWord}
                     getRandomTranslation={getRandomTranslation}
-                    rightTranslation={getRandomItem(randomWord.translations)}
+                    rightTranslation={
+                      settings.showRandomlyTranslation
+                        ? getRandomItem(randomWord.translations)
+                        : randomWord.translations[0]
+                    }
                   />
                 ) : null}
               </>
@@ -134,7 +139,8 @@ export default function App() {
             {showSettings && settings ? (
               <Settings
                 settings={settings}
-                toggleMode={toggleMode}
+                toggleInputMode={toggleInputMode}
+                toggleShowRandomlyTranslation={toggleShowRandomlyTranslation}
                 setShowSettings={setShowSettings}
                 resetFrequency={resetFrequencyJson}
               />

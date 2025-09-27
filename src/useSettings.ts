@@ -9,10 +9,12 @@ export enum mode {
 }
 export interface AppSettings {
   mode: mode;
+  showRandomlyTranslation: boolean;
 }
 
 const standartSettings = {
   mode: mode.MultipleChoise,
+  showRandomlyTranslation: false,
 };
 
 export default function useSettings() {
@@ -41,14 +43,24 @@ export default function useSettings() {
     if (settings) RNFS.writeFile(path, JSON.stringify(settings), 'utf8');
   }, [settings]);
 
-  function toggleMode() {
-    setSettings({
-      mode:
-        settings?.mode === mode.InputWord
-          ? mode.MultipleChoise
-          : mode.InputWord,
-    });
+  function toggleInputMode() {
+    if (settings)
+      setSettings({
+        mode:
+          settings?.mode === mode.InputWord
+            ? mode.MultipleChoise
+            : mode.InputWord,
+        showRandomlyTranslation: settings.showRandomlyTranslation,
+      });
   }
 
-  return { settings, toggleMode };
+  function toggleShowRandomlyTranslation() {
+    if (settings)
+      setSettings({
+        mode: settings.mode,
+        showRandomlyTranslation: !settings.showRandomlyTranslation,
+      });
+  }
+
+  return { settings, toggleInputMode, toggleShowRandomlyTranslation };
 }
