@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@notifee/react-native": "^9.1.8",
     "@react-native/new-app-screen": "0.81.4",
     "fuzzball": "^2.2.3",
     "lucide-react-native": "^0.544.0",

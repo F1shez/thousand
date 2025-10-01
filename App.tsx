@@ -11,7 +11,7 @@ import { InputWord } from './src/components/InputWord';
 import React, { useState, useEffect, useRef } from 'react';
 import useTranslationTrainer, {
   WeightedArrayItem,
-} from './src/useTranslationTrainer';
+} from './src/hooks/useTranslationTrainer';
 import { Settings } from './src/components/Settings';
 
 import { Settings as SettingsIcon } from 'lucide-react-native';
@@ -21,8 +21,12 @@ import { InfoBar } from './src/components/InfoBar';
 import { MultipleChoice } from './src/components/MultipleChoice';
 import { getRandomItem } from './src/utils';
 import useSettings, { mode } from './src/useSettings';
+import { useNotification } from './src/hooks/useNotification';
 
 export default function App() {
+
+  useNotification(9, 0);
+  
   const [randomWord, setRandomWord] = useState<WeightedArrayItem | null>(null);
   const [showSettings, setShowSettings] = useState<boolean>(false);
 

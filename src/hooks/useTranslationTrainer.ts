@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import RNFS, { DocumentDirectoryPath, exists } from 'react-native-fs';
-import translationData from './translations.json';
+import translationData from '../translations.json';
 import { ratio } from 'fuzzball';
 import { Alert } from 'react-native';
-import { getRandomItem } from './utils';
-import { AppSettings } from './useSettings';
+import { getRandomItem } from '../utils';
+import { AppSettings } from '../useSettings';
 
 export interface WordItem {
   word: string;
