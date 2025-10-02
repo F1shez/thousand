@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { S } from '../../constants/spacing';
-interface InfoBarProps {
-  rightWordsCount: number;
-  wrongWordsCount: number;
-}
-export function InfoBar(props: InfoBarProps) {
+import { useStatisticsStore } from '../store/useStatisticsStore ';
+
+export function InfoBar() {
+  const { sessionRightWords, sessionWrongWords } = useStatisticsStore();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.rightCount}>{props.rightWordsCount}</Text>
+      <Text style={styles.rightCount}>{sessionRightWords}</Text>
       <Text>/</Text>
-      <Text style={styles.wrongCount}>{props.wrongWordsCount}</Text>
+      <Text style={styles.wrongCount}>{sessionWrongWords}</Text>
     </View>
   );
 }

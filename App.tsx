@@ -22,11 +22,11 @@ import { MultipleChoice } from './src/components/MultipleChoice';
 import { getRandomItem } from './src/utils';
 import useSettings, { mode } from './src/useSettings';
 import { useNotification } from './src/hooks/useNotification';
+import { useStatisticsStore } from './src/store/useStatisticsStore ';
 
 export default function App() {
+  useNotification(20, 0);
 
-  useNotification(9, 0);
-  
   const [randomWord, setRandomWord] = useState<WeightedArrayItem | null>(null);
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
@@ -35,8 +35,8 @@ export default function App() {
 
   const [behaviour, setBehaviour] = useState<'padding' | undefined>('padding');
 
-  const [rightWordsCount, setRightWordsCount] = useState<number>(0);
-  const [wrongWordsCount, setWrongWordsCount] = useState<number>(0);
+  const { addRightWord, addWrongWord, loadStatisticsFromFile } =
+    useStatisticsStore();
 
   const { settings, toggleInputMode, toggleShowRandomlyTranslation } =
     useSettings();
@@ -64,14 +64,18 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    loadStatisticsFromFile();
+  }, [loadStatisticsFromFile]);
+
+  useEffect(() => {
     const word = getRandomWord();
     setRandomWord(word);
   }, [getRandomWord]);
 
   function handleCheckWord(word: string) {
     const isCorrect = checkTranslateWord(word);
-    if (isCorrect) setRightWordsCount(rightWordsCount + 1);
-    else setWrongWordsCount(wrongWordsCount + 1);
+    if (isCorrect) addRightWord();
+    else addWrongWord();
 
     Animated.sequence([
       Animated.timing(backgroundAnim, {
@@ -86,7 +90,7 @@ export default function App() {
       }),
     ]).start();
 
-    // Периодически сохраняем текущие веса повторений слов
+    // Periodically save the current frequency words
     if (callCount.current === 5) {
       saveFrequencyJson();
       callCount.current = 0;
@@ -97,7 +101,7 @@ export default function App() {
 
   const backgroundColor = backgroundAnim.interpolate({
     inputRange: [-1, 0, 1],
-    outputRange: ['#ffb3b3', '#fff', '#90ee90'], // красный → белый → зелёный
+    outputRange: ['#ffb3b3', '#fff', '#90ee90'], // red → white → green
   });
 
   return (
@@ -109,10 +113,7 @@ export default function App() {
           keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         >
           <Animated.View style={[styles.body, { backgroundColor }]}>
-            <InfoBar
-              rightWordsCount={rightWordsCount}
-              wrongWordsCount={wrongWordsCount}
-            />
+            <InfoBar />
             <TouchableOpacity
               onPress={() => {
                 setShowSettings(true);

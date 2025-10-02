@@ -2,6 +2,7 @@ import { CircleX } from 'lucide-react-native';
 import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { S } from '../../constants/spacing';
 import { mode, AppSettings } from '../useSettings';
+import { useStatisticsStore } from '../store/useStatisticsStore ';
 
 interface SettingsProps {
   setShowSettings: (value: boolean) => void;
@@ -12,6 +13,9 @@ interface SettingsProps {
 }
 
 export function Settings(props: SettingsProps) {
+  const { totalRightWords, totalWrongWords, wordsHaveFrequencyZero } =
+    useStatisticsStore();
+
   return (
     <View style={[StyleSheet.absoluteFillObject, styles.body]}>
       <View style={styles.rowContainer}>
@@ -50,6 +54,19 @@ export function Settings(props: SettingsProps) {
             color="#000000"
           />
         </View>
+
+        <View style={styles.statistics}>
+          <Text>Правильные/Неправильные слова за все время</Text>
+          <Text style={styles.rightCount}>{totalRightWords}</Text>
+          <Text>/</Text>
+          <Text style={styles.wrongCount}>{totalWrongWords}</Text>
+        </View>
+        <View style={styles.statistics}>
+          <Text>
+            Количество выученных слов (угаданы 5 и более раз):{' '}
+            {wordsHaveFrequencyZero}
+          </Text>
+        </View>
       </View>
     </View>
   );
@@ -83,5 +100,18 @@ const styles = StyleSheet.create({
     width: '50%',
     marginBottom: 8,
     paddingHorizontal: 4,
+  },
+  statistics: {
+    width: '50%',
+    marginBottom: 8,
+    paddingHorizontal: 4,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  rightCount: {
+    color: 'green',
+  },
+  wrongCount: {
+    color: 'red',
   },
 });

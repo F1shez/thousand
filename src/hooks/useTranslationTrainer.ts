@@ -5,6 +5,7 @@ import { ratio } from 'fuzzball';
 import { Alert } from 'react-native';
 import { getRandomItem } from '../utils';
 import { AppSettings } from '../useSettings';
+import { useStatisticsStore } from '../store/useStatisticsStore ';
 
 export interface WordItem {
   word: string;
@@ -29,17 +30,23 @@ export default function useTranslationTrainer(
   const [curentWord, setCurentWord] = useState<WeightedArrayItem | null>(null);
   const [countWords, setCountWords] = useState<number>(0);
 
+  const { setFrequencyCount } = useStatisticsStore();
+
   const readJsonFile = useCallback(async () => {
     try {
       const jsonString = await RNFS.readFile(path, 'utf8');
       const jsonData = JSON.parse(jsonString) as WordItem[];
       setWordsArray(jsonData);
+      const countFrequency = jsonData.filter(
+        word => word.frequency === 0,
+      ).length;
+      setFrequencyCount(countFrequency);
       setCountWords(jsonData.length);
       generateWeightedArray(jsonData);
     } catch (error) {
       console.error('Error reading file:', error);
     }
-  }, []);
+  }, [setFrequencyCount]);
 
   useEffect(() => {
     exists(path).then(async exist => {
@@ -118,7 +125,6 @@ export default function useTranslationTrainer(
   }
 
   function generateWeightedArray(array: WordItem[]) {
-    // Вычисляем взвешенный массив
     const tempWeightedArray = array.reduce<WeightedArrayItem[]>((acc, item) => {
       return acc.concat(Array(item.frequency).fill(item));
     }, []);
@@ -135,6 +141,7 @@ export default function useTranslationTrainer(
   }, [weightedArray]);
 
   async function saveFrequencyJson() {
+    console.log('save');
     await RNFS.writeFile(path, JSON.stringify(wordsArray), 'utf8');
   }
 

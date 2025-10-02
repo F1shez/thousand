@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
-import RNFS, { DocumentDirectoryPath, exists } from 'react-native-fs';
+import { useEffect, useState } from 'react';
+import RNFS, { DocumentDirectoryPath } from 'react-native-fs';
+import { getDataFile } from './utils';
 
 const path = `${DocumentDirectoryPath}/settings.json`;
 
@@ -7,37 +8,31 @@ export enum mode {
   InputWord,
   MultipleChoise,
 }
+
+export interface Statistics {
+  rightWordsCount: number;
+  wrongWordsCount: number;
+  wordsHaveZeroFrequencyCount: number;
+}
+
 export interface AppSettings {
   mode: mode;
   showRandomlyTranslation: boolean;
 }
 
-const standartSettings = {
+const standardSettings = {
   mode: mode.MultipleChoise,
   showRandomlyTranslation: false,
 };
 
 export default function useSettings() {
-  const [settings, setSettings] = useState<AppSettings>();
-
-  const readJsonFile = useCallback(async () => {
-    try {
-      const jsonString = await RNFS.readFile(path, 'utf8');
-      const jsonData = JSON.parse(jsonString) as AppSettings;
-      setSettings(jsonData);
-    } catch (error) {
-      console.error('Error reading file:', error);
-    }
-  }, []);
+  const [settings, setSettings] = useState<AppSettings>(standardSettings);
 
   useEffect(() => {
-    exists(path).then(async exist => {
-      if (!exist) {
-        await RNFS.writeFile(path, JSON.stringify(standartSettings), 'utf8');
-      }
-      readJsonFile();
+    getDataFile<AppSettings>(path, standardSettings).then(data => {
+      if (data) setSettings(data);
     });
-  }, [readJsonFile]);
+  }, []);
 
   useEffect(() => {
     if (settings) RNFS.writeFile(path, JSON.stringify(settings), 'utf8');
@@ -45,22 +40,26 @@ export default function useSettings() {
 
   function toggleInputMode() {
     if (settings)
-      setSettings({
+      setSettings(prev => ({
+        ...prev,
         mode:
           settings?.mode === mode.InputWord
             ? mode.MultipleChoise
             : mode.InputWord,
-        showRandomlyTranslation: settings.showRandomlyTranslation,
-      });
+      }));
   }
 
   function toggleShowRandomlyTranslation() {
     if (settings)
-      setSettings({
-        mode: settings.mode,
+      setSettings(prev => ({
+        ...prev,
         showRandomlyTranslation: !settings.showRandomlyTranslation,
-      });
+      }));
   }
 
-  return { settings, toggleInputMode, toggleShowRandomlyTranslation };
+  return {
+    settings,
+    toggleInputMode,
+    toggleShowRandomlyTranslation,
+  };
 }

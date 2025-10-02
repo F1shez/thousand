@@ -1,4 +1,4 @@
-package com.thousandnew
+package com.thousand
 
 import android.app.Application
 import com.facebook.react.PackageList

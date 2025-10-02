@@ -8,37 +8,34 @@ import notifee, {
 export const useNotification = (hour = 9, minute = 0) => {
   useEffect(() => {
     const scheduleDailyNotification = async () => {
-      // Запрос разрешения
       await notifee.requestPermission();
 
-      // Удаляем старые уведомления
       await notifee.cancelAllNotifications();
 
-        // Время следующего уведомления
-        const now = new Date();
-        const nextTrigger = new Date();
-        nextTrigger.setHours(hour);
-        nextTrigger.setMinutes(minute);
-        nextTrigger.setSeconds(0);
+      const now = new Date();
+      const nextTrigger = new Date();
 
-        // Если время уже прошло сегодня, ставим на завтра
-        if (nextTrigger <= now) {
-          nextTrigger.setDate(nextTrigger.getDate() + 1);
-        }
+      nextTrigger.setHours(hour);
+      nextTrigger.setMinutes(minute);
+      nextTrigger.setSeconds(0);
+
+      if (nextTrigger <= now) {
+        nextTrigger.setDate(nextTrigger.getDate() + 1);
+      }
 
       const trigger: TimestampTrigger = {
         type: TriggerType.TIMESTAMP,
         timestamp: nextTrigger.getTime(),
-        repeatFrequency: RepeatFrequency.DAILY, // повторение каждый день
+        repeatFrequency: RepeatFrequency.DAILY,
       };
 
       await notifee.createTriggerNotification(
         {
           title: 'Time to education!',
-          body: 'practice english today',
+          body: 'Practice english today',
           android: {
-            channelId: 'daily-reminder', // канал нужно создать
-            smallIcon: 'ic_launcher', // ваш иконка
+            channelId: 'daily-reminder', 
+            smallIcon: 'tray_icon',
           },
         },
         trigger,
